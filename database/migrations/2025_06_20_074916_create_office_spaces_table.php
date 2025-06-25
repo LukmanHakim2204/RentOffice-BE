@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('thumbnail');
             $table->text('about');
             $table->foreignId('city_id')->constrained()->onDelete('cascade');
-            $table->boolean('is_open')->nullable();
-            $table->boolean('is_fullbook')->nullable();
+            $table->boolean('is_open');
+            $table->boolean('is_fullbook');
             $table->integer('price');
             $table->integer('duration');
             $table->string('address');
