@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('booking_transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->string('name');
             $table->string('phone_number');
             $table->string('booking_trx_id');
