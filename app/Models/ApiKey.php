@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class OfficeSpaceBenefit extends Model
+class ApiKey extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = [
+    protected $fillable =
+    [
         'name',
-        'office_space_id',
+        'key',
     ];
 }

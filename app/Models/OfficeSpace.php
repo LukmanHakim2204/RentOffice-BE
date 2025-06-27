@@ -11,11 +11,37 @@ class OfficeSpace extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'title',
+        'name',
         'slug',
+        'thumbnail',
         'description',
-        'price',
+        'about',
         'city_id',
-        'user_id',
+        'is_open',
+        'is_fullbook',
+        'photo',
+        'price',
+        'duration',
+        'address',
     ];
+
+    public  function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = str($value)->slug();
+    }
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(OfficeSpacePhoto::class);
+    }
+
+    public function benefits()
+    {
+        return $this->hasMany(OfficeSpaceBenefit::class);
+    }
 }
