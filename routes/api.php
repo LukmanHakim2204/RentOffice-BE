@@ -10,6 +10,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/city/{city:slug}', [CityController::class, 'show']);
 Route::apiResource('/cities', CityController::class);
-Route::apiResource('/office-spaces', OfficeSpaceController::class);
-Route::apiResource('/booking-transactions', BookingTransactionController::class);
+Route::get('/office/{officeSpace:slug}', [OfficeSpaceController::class, 'show']);
+Route::apiResource('/offices', OfficeSpaceController::class);
+Route::post('/booking-transactions', [BookingTransactionController::class, 'store']);
+Route::get('/check-booking', [BookingTransactionController::class, 'booking_details']);
