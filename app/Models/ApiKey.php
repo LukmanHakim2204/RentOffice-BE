@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ApiKey extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable =
     [
         'name',
