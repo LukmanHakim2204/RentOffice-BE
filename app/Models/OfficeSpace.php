@@ -44,4 +44,8 @@ class OfficeSpace extends Model
     {
         return $this->hasMany(OfficeSpaceBenefit::class);
     }
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
 }

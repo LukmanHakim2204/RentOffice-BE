@@ -84,6 +84,24 @@ class OfficeSpaceResource extends Resource
                                     ->required()
                                     ->maxLength(255),
                             ]),
+                        Forms\Components\Repeater::make('contacts')
+                            ->relationship('contacts')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('position')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('phone')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\FileUpload::make('picture')
+                                    ->image()
+                                    ->maxSize(2048)
+                                    ->nullable()
+                                    ->columnSpanFull(),
+                            ]),
                     ])->columns(2),
 
             ]);
