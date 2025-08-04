@@ -21,10 +21,10 @@ class BookingTransactionsResource extends JsonResource
             'booking_trx_id' => $this->booking_trx_id,
             'is_paid' => $this->is_paid,
             'ended_at' => $this->ended_at,
-            'office_space_id' => new OfficeSpaceResource($this->whenLoaded('office_space')),
             'total_amount' => $this->total_amount,
             'duration' => $this->duration,
-            'started_at' => $this->started_at
+            'started_at' => $this->started_at,
+            'officeSpace' => $this->whenLoaded('officeSpace'),
         ];
     }
 }
