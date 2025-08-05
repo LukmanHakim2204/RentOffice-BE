@@ -2,16 +2,18 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BookingTransactionResource\Pages;
-use App\Filament\Resources\BookingTransactionResource\RelationManagers;
-use App\Models\BookingTransaction;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Twilio\Rest\Client;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use App\Models\BookingTransaction;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\BookingTransactionResource\Pages;
+use App\Filament\Resources\BookingTransactionResource\RelationManagers;
 
 class BookingTransactionResource extends Resource
 {
@@ -104,6 +106,52 @@ class BookingTransactionResource extends Resource
                 //
             ])
             ->actions([
+
+                Tables\Actions\Action::make('approve')
+                    ->label('Approve')
+                    ->action(function (BookingTransaction $record) {
+                        $record->is_paid = true;
+                        $record->save();
+
+
+                        Notification::make()
+                            ->title('Approved')
+                            ->success()
+                            ->body('The Booking Transaction has been approved.')
+                            ->send();
+
+                        $ssid = getenv('TWILIO_ACCOUNT_SID');
+                        $token = getenv('TWILIO_AUTH_TOKEN');
+                        $twilio = new Client($ssid, $token);
+
+                        $messageBody = "Hi {$record->name}, pesanan anda dengan kode {$record->booking_trx_id} sudah terbayar penuh. \n \n";
+                        $messageBody .=  "Silahkan datang kepada lokasi Kantor {$record->officeSpace->name} untuk memulai menggunakan ruangan tersebut. \n \n";
+                        $messageBody .=  "Jika memiliki kendala silahkan menghubungi CS Lukman Hakim, Terima Kasih.";
+
+
+                        $phoneNumber = $record->phone_number;
+
+                        // Jika nomor dimulai dengan 08, ganti dengan +628
+                        if (substr($phoneNumber, 0, 2) == '08') {
+                            $phoneNumber = '+628' . substr($phoneNumber, 2);
+                        }
+                        // Jika sudah ada +, gunakan langsung
+                        elseif (substr($phoneNumber, 0, 1) != '+') {
+                            $phoneNumber = '+62' . ltrim($phoneNumber, '0');
+                        }
+                        $message = $twilio->messages
+                            ->create(
+                                "whatsapp:{$phoneNumber}", // to
+                                array(
+                                    "from" => "whatsapp:+14155238886",
+                                    "body" => $messageBody
+                                )
+                            );
+                    })->icon('heroicon-s-check-circle')
+                    ->color('success')
+                    ->visible(function (BookingTransaction $record) {
+                        return $record->is_paid == false;
+                    }),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
