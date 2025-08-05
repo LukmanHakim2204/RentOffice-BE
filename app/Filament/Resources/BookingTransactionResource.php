@@ -109,6 +109,7 @@ class BookingTransactionResource extends Resource
 
                 Tables\Actions\Action::make('approve')
                     ->label('Approve')
+                    ->requiresConfirmation()
                     ->action(function (BookingTransaction $record) {
                         $record->is_paid = true;
                         $record->save();
